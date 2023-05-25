@@ -1,0 +1,14 @@
+!###! Security and Privacy !###!
+enable
+configure terminal
+line vty 0 15
+    password cisco
+    enable secret cisco
+    login
+    service password-encryption
+    exit
+
+line console 0
+    password cisco
+    login
+    exit
