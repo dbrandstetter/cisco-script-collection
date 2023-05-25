@@ -12,3 +12,16 @@ line console 0
     password cisco
     login
     exit
+
+!###! SSH !###!
+enable
+configure terminal
+ip domain-name cisco.com
+crypto key generate rsa
+username cisco privilege 15 secret cisco
+
+line vty 0 15
+    transport input ssh
+    login local
+    exit
+    
