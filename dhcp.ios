@@ -1,0 +1,10 @@
+!!! DHCP server !!!
+ip dhcp excluded-address 192.168.10.1 192.168.10.9
+ip dhcp excluded-address 192.168.10.254
+ip dhcp pool LAN-POOL-1
+    network 192.168.10.0 255.255.255.0
+    default-router 192.168.10.1
+    dns-server 192.168.11.5
+    domain-name example.com
+    exit
+    
