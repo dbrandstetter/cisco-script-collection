@@ -1,0 +1,106 @@
+! ===============================================================
+! R O U T E R - [DEVICE-NAME]
+! ===============================================================
+
+! Set Hostname
+! ------------
+enable
+configure terminal
+	hostname [HOSTNAME]
+
+! Disable DNL
+! -----------
+no ip domain-lookup
+
+! Set Enable Password
+! -------------------
+enable secret [ENABLE-PASSWORD(cisco)]
+
+! Set Console Password
+! --------------------
+line console 0
+	motd-banner
+	password [CONSOLE-PASSWORD(cisco)]
+	exec-timeout [MINUTES(5)] [SECONDS(30)]
+	login
+	exit
+
+! Configure Ports For Secure Access
+! ---------------------------------
+line vty [(PORT-RANGE(0 15)]
+	motd-banner
+	password [PORT-PASSWORD(cisco)]
+	exec-timeout [MINUTES(5)] [SECONDS(30)]
+	transport input [CONNECTION-TYPE (telnet) | (ssh))
+	login [DB-LOCATION(local)]
+	exit
+
+! Adding Security Configurations
+! ------------------------------
+! auto secure
+service password-encryption
+security passwords min-length [MIN-PASSWORD-LENGTH(8)]
+login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
+
+
+! Write Banner MOTD
+! -----------------
+banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
+
+! Configure Interface(s)
+! ----------------------
+interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+	description [NETWORK-DESCRIPTION]
+	speed auto
+	duplex auto
+	ipv6 enable
+	clock rate [CLOCK-RATE(64000)]
+	ip address [(dhcp)] | [[PORT-IPv4-ADDRESS] [PORT-IPv4-SUBNET-MASK]]
+	no shutdown
+	exit
+
+! Create DHCP-Pool(s)
+! -------------------
+ip dhcp excluded-address [START-IPv4-ADDRESS] [END-IPv4-ADDRESS(included)]
+ip dhcp pool [POOLNAME]
+	network [NETWORK-IPv4-ADDRESS] [NETWORK-IPv4-SUBNET-MASK]
+	default-router [IPv4-ADDRESS]
+	dns-server [IP-ADDRESS]
+	domain-name [DOMAIN-NAME(www.example.net)]
+	lease [LEASE-DURATION(days hours minutes | infinite)]
+	exit
+
+! Enable DHCP-Service
+! -------------------
+service dhcp
+
+! Disable Unused Services
+! -----------------------
+! no ip http server
+
+! Configure Relay Agent
+! ---------------------
+int [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+	ip helper-address [IPv4-HELPER-ADDRESS]
+	exit
+
+! Enable RIP Support
+! ------------------
+router rip
+	version 2
+	no auto-summary
+	network [CLASSFUL-ADDRESS(130.140.0.0)]
+	passive-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+	default-information originate
+	exit
+
+! Configuring SSH-Access
+! ----------------------
+ip domain-name [DOMAIN-NAME]
+crypto key generate rsa general-keys moulus [MODULUS-LENGTH (2048)]
+ip ssh version 2
+username [USERNAME] secret [SSH-PASSWORD]
+
+! Save Configuration
+! ------------------
+do write memory
