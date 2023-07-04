@@ -1,0 +1,95 @@
+! ================================================================
+! S W I T C H - [DEVICE-NAME]
+! ================================================================
+
+! Declare SDM Template
+! --------------------
+sdm prefer dual-ipv4-and-ipv6 default
+
+! Reload now...
+
+! Set Hostname
+! ------------
+enable
+configure terminal
+	hostname [HOSTNAME]
+
+! Disable DNL
+! -----------
+no ip domain-lookup
+
+! Enable Unicast Routing
+! ----------------------
+ipv6 unicast-routing
+
+! Set Enable Password
+! -------------------
+enable secret [ENABLE-PASSWORD(cisco)]
+
+! Set Console Password
+! --------------------
+line console 0
+	motd-banner
+	password [CONSOLE-PASSWORD(cisco)]
+	exec-timeout [MINUTES(5)] [SECONDS(30)]
+	login
+	exit
+
+! Configure Ports For Secure Access
+! ---------------------------------
+line vty [(PORT-RANGE(0 15)]
+	motd-banner
+	password [PORT-PASSWORD(cisco)]
+	exec-timeout [MINUTES(5)] [SECONDS(30)]
+	transport input [CONNECTION-TYPE (telnet) | (ssh))
+	login [DB-LOCATION(local)]
+	exit
+
+! Adding Security Configurations (not avalable for all switches)
+! --------------------------------------------------------------
+! auto secure
+service password-encryption
+security passwords min-length [MIN-PASSWORD-LENGTH(8)]
+login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
+
+! Write Banner MOTD
+! -----------------
+banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
+
+! Configure Interface(s)
+! ----------------------
+interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+	description [PORT-DESCRIPTION]
+	mdix auto
+	speed auto
+	duplex auto
+	no shutdown
+	exit
+
+! Configure Virtual Interface(s)
+! ------------------------------
+interface vlan 1
+	description [VLAN-DESCRIPTION]
+	ipv6 address [(dhcp)] | [IPv6-ADDRESS][IPv6-PREFIX]
+	ipv6 address [fe80::LLA-Address] link-local
+	no shutdown
+	exit
+
+! Declare Default Gateway
+! -----------------------
+ipv6 route ::/0 [IPv6-DEFAULT-GATEWAY]
+
+! Disable Unused Services
+! -----------------------
+! no ip http server
+
+! Configuring SSH-Access
+! ----------------------
+ip domain-name [DOMAIN-NAME]
+crypto key generate rsa general-keys modulus [MODULUS-LENGTH (2048)]
+ip ssh version 2
+username [USERNAME] secret [SSH-PASSWORD]
+
+! Save Configuration
+! ------------------
+do write memory
