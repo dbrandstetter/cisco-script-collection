@@ -1,0 +1,36 @@
+TERMINAL
+========
+ipconfig /all
+ipconfig /release -> /renew
+route -4/-6 print
+arp -a
+
+! IPV6 multicast groups
+netsh int ipv6 show joins
+tracert/tracepath IPADDRESS
+ipconfig /displaydns
+
+ROUTER
+======
+show ip dhcp binding
+show ip dhcp server statistics
+show running-config | section dhcp
+show dhcp lease
+
+show ip protocols
+show ip route [connected|rip|static|summary]
+debug ip rip
+
+show ssh
+show ip ssh
+
+show ip ports all
+
+SWITCH
+======
+show sdm prefer
+
+show ssh
+show ip ssh
+
+show ip ports all
