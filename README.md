@@ -22,9 +22,9 @@
 
 👤 **David Brandstetter**
 
-* Website: david-brandstetter.com
+* Website: [david-brandstetter.com](https://david-brandstetter.com)
 * Github: [@dbrandstetter](https://github.com/dbrandstetter)
-* LinkedIn: @David Brandstetter
+* LinkedIn: [@David Brandstetter](https://www.linkedin.com/in/david-brandstetter-it/)
 
 ## Show your support
 
