@@ -8,7 +8,7 @@
 > ...| indicate the possibility of several regular options</br></br>
 > Commands implemented so far:
 > <ul><li>Basic device configuration</li>
-> <li>IPv4 & IPv&</li>
+> <li>IPv4 & IPv6</li>
 > <li>DHCP</li>
 > <li>RIP</li>
 > <li>SSH</li>
