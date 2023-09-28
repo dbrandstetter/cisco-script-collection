@@ -49,17 +49,29 @@ line vty [(PORT-RANGE(0 15)]
 ! --------------------------------------------------------------
 ! auto secure
 service password-encryption
-security passwords min-length [MIN-PASSWORD-LENGTH(8)]
+security passwords min-length [MIN-PASSWORD-LENGTH(12)]
 login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
 
 ! Write Banner MOTD
 ! -----------------
 banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
 
+! Create VLAN(s)
+! --------------
+vlan [VLAN-ID]
+	name [VLAN-NAME]
+	exit
+
 ! Configure Interface(s)
-! ----------------------
-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
-	description [PORT-DESCRIPTION]
+! ------------------------------
+interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
+	switchport trunk encapsulation dot1q
+	switchport nonegotiate
+	switchport mode [access | trunk | dynamic [auto | desirable]]
+	switchport [access | voice] vlan [VLAN-ID]
+	switchport trunk native vlan [VLAN-ID]
+	switchport trunk allowed vlan [VLAN-ID-LIST]
+	mls qos trust [cos | device cisco-phone | dscp | ip-precedence]
 	mdix auto
 	speed auto
 	duplex auto
@@ -68,9 +80,8 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 
 ! Configure Virtual Interface(s)
 ! ------------------------------
-interface vlan 1
-	description [VLAN-DESCRIPTION]
-	ipv6 address [(dhcp)] | [IPv6-ADDRESS][IPv6-PREFIX]
+interface vlan [SVI-NUMBER(1)]
+	ipv6 address [(dhcp)] | [IPV6-ADDRESS/IPV6-PREFIX]
 	ipv6 address [fe80::LLA-Address] link-local
 	no shutdown
 	exit

@@ -1,11 +1,11 @@
-<h1 align="center">Welcome to my Cisco script collection 👋</h1>
+<h1 align="center">Welcome to my Cisco Script Collection 👋</h1>
 
 
 > A collection of templates for configuring <i>Cisco</i> devices.</br></br>
 > In the scripts...</br>
-> ...[] represent placeholders</br>
-> ...() stand for the usually chosen options</br>
-> ...| indicate the possibility of several regular options</br></br>
+> ...`[]` represent placeholders</br>
+> ...`()` stand for the usually chosen options</br>
+> ...`|` indicate the possibility of several options</br></br>
 > Commands implemented so far:
 > <ul><li>Basic device configuration</li>
 > <li>IPv4 & IPv6</li>

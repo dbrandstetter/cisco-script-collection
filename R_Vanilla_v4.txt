@@ -39,23 +39,20 @@ line vty [(PORT-RANGE(0 15)]
 ! ------------------------------
 ! auto secure
 service password-encryption
-security passwords min-length [MIN-PASSWORD-LENGTH(8)]
+security passwords min-length [MIN-PASSWORD-LENGTH(12)]
 login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
-
 
 ! Write Banner MOTD
 ! -----------------
 banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
 
-! Configure Interface(s)
-! ----------------------
-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+! Configure (Sub-)Interface(s)
+! ----------------------------
+interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)][.SUBINTERFACE]
 	description [NETWORK-DESCRIPTION]
-	speed auto
-	duplex auto
-	ipv6 enable
 	clock rate [CLOCK-RATE(64000)]
 	ip address [(dhcp)] | [[PORT-IPv4-ADDRESS] [PORT-IPv4-SUBNET-MASK]]
+	encapsulation dot1Q [VLAN-ID] [native]
 	no shutdown
 	exit
 
@@ -84,12 +81,16 @@ int [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	ip helper-address [IPv4-HELPER-ADDRESS]
 	exit
 
+! Add Static Routes
+! -----------------
+ip route 0.0.0.0 0.0.0.0 [IPV4-GATEWAY-OF-LAST-RESORT]
+
 ! Enable RIP Support
 ! ------------------
 router rip
 	version 2
 	no auto-summary
-	network [CLASSFUL-ADDRESS(130.140.0.0)]
+	network [IPV4-NETWORK-ADDRESS]
 	passive-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	default-information originate
 	exit

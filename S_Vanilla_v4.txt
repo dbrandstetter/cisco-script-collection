@@ -39,7 +39,7 @@ line vty [(PORT-RANGE(0 15)]
 ! --------------------------------------------------------------
 ! auto secure
 service password-encryption
-security passwords min-length [MIN-PASSWORD-LENGTH(8)]
+security passwords min-length [MIN-PASSWORD-LENGTH(12)]
 login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
 
 ! Write Banner MOTD
@@ -58,15 +58,44 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 
 ! Configure Virtual Interface(s)
 ! ------------------------------
-interface vlan 1
+interface vlan [VLAN-ID]
 	description [VLAN-DESCRIPTION]
 	ip address [(dhcp)] | [IPv4-ADDRESS] [IPv4-SUBNET-MASK]
 	no shutdown
 	exit
 
+! Create VLAN(s)
+! --------------
+vlan [VLAN-ID]
+	name [VLAN-NAME]
+	exit
+
+! Configure Interface(s)
+! ------------------------------
+interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
+	switchport trunk encapsulation dot1q
+	switchport mode [access | trunk | dynamic [auto | desirable]]
+	switchport nonegotiate
+	switchport [access | voice] vlan [VLAN-ID]
+	switchport trunk native vlan [VLAN-ID]
+	switchport trunk allowed vlan [VLAN-ID-LIST]
+	mls qos trust [cos | device cisco-phone | dscp | ip-precedence]
+	mdix auto
+	speed auto
+	duplex auto
+	no shutdown
+	exit
+
+! Configure Virtual Interface(s)
+! ------------------------------
+interface vlan [SVI-NUMBER(1)]
+	ip address [(dhcp)] | [IPV4-ADDRESS] [IPV4-SUBNET-MASK]
+	no shutdown
+	exit
+
 ! Declare Default Gateway
 ! -----------------------
-ip default-gateway [IPv4-DEFAULT-GATEWAY]
+ip default-gateway [IPV4-DEFAULT-GATEWAY]
 
 ! Disable Unused Services
 ! -----------------------
