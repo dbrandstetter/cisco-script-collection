@@ -15,7 +15,7 @@
 > <li>VLAN</li>
 > <li>ROAS</li>
 > <li>Security settings</li>
-> </ul></br>
+> </ul><br>
 > Further configurations will follow.
 
 ## Author
