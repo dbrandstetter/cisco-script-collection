@@ -21,6 +21,7 @@ enable secret [ENABLE-PASSWORD(cisco)]
 line console 0
 	motd-banner
 	password [CONSOLE-PASSWORD(cisco)]
+	loggin synchronous
 	exec-timeout [MINUTES(5)] [SECONDS(30)]
 	login
 	exit
