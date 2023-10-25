@@ -14,7 +14,7 @@
 > <li>SSH</li>
 > <li>VLAN</li>
 > <li>ROAS</li>
-  <li>STP/RSTP/MSTP</li>
+> <li>STP/RSTP/MSTP</li>
 > <li>Security settings</li>
 > </ul><br>
 > Further configurations will follow.
