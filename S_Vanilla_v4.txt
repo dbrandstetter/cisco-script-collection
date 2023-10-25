@@ -81,6 +81,9 @@ interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	switchport trunk native vlan [VLAN-ID]
 	switchport trunk allowed vlan [VLAN-ID-LIST]
 	mls qos trust [cos | device cisco-phone | dscp | ip-precedence]
+	switchport portfast
+	spanning-tree [vlan [VLAN-ID]] cost [COST]
+	spanning-tree [vlan [VLAN-ID]] port-priority [PRIORITY]
 	mdix auto
 	speed auto
 	duplex auto
@@ -93,6 +96,14 @@ interface vlan [SVI-NUMBER(1)]
 	ip address [(dhcp)] | [IPV4-ADDRESS] [IPV4-SUBNET-MASK]
 	no shutdown
 	exit
+
+! Implement General Spanning Tree Settings
+! ----------------------------------------
+spanning-tree pathcost method long
+spanning-tree mode [psvt | rapid-pvst]
+spanning-tree vlan [VLAN-ID] priority [PRIORITY]
+spanning-tree vlan [VLAN-ID] root [primary | secondary]
+spanning-tree mode [pvst | rapid-pvst | mstp]
 
 ! Declare Default Gateway
 ! -----------------------
