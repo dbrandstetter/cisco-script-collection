@@ -66,6 +66,7 @@ vlan [VLAN-ID]
 ! Configure Interface(s)
 ! ------------------------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
+	description [DESCRIPTION]
 	switchport trunk encapsulation dot1q
 	switchport nonegotiate
 	switchport mode [access | trunk | dynamic [auto | desirable]]
@@ -88,6 +89,18 @@ interface vlan [SVI-NUMBER(1)]
 	ipv6 address [(dhcp)] | [IPV6-ADDRESS/IPV6-PREFIX]
 	ipv6 address [fe80::LLA-Address] link-local
 	no shutdown
+	exit
+
+! Create Trunk Links For EtherChannel/LACP/PAgP
+! --------------------------------------------
+interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
+	shutdown
+	channel-group [GROUP-NUMBER(1)] mode [active (LACP) | auto (try PAgP) | desirable (PAgP) | on (only EtherChannel) | passive (try LACP)]
+	no shutdown
+	exit
+
+interface port-channel [GROUP-NUMBER(1)]
+	switchport mode trunk
 	exit
 
 ! Implement General Spanning Tree Settings
