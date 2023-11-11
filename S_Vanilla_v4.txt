@@ -47,16 +47,6 @@ login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(6
 ! -----------------
 banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
 
-! Configure Interface(s)
-! ----------------------
-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
-	description [PORT-DESCRIPTION]
-	midx auto
-	speed auto
-	duplex auto
-	no shutdown
-	exit
-
 ! Configure Virtual Interface(s)
 ! ------------------------------
 interface vlan [VLAN-ID]
@@ -71,9 +61,10 @@ vlan [VLAN-ID]
 	name [VLAN-NAME]
 	exit
 
-! Configure Interface(s)
-! ------------------------------
+! Configure Interface(s), DTP, STP, Trunking, VLANs
+! -------------------------------------------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
+	description [PORT-DESCRIPTION]
 	switchport trunk encapsulation dot1q
 	switchport mode [access | trunk | dynamic [auto | desirable]]
 	switchport nonegotiate
@@ -95,6 +86,18 @@ interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 interface vlan [SVI-NUMBER(1)]
 	ip address [(dhcp)] | [IPV4-ADDRESS] [IPV4-SUBNET-MASK]
 	no shutdown
+	exit
+
+! Create Trunk Links For EtherChannel/LACP/PAgP
+! --------------------------------------------
+interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
+	shutdown
+	channel-group [GROUP-NUMBER(1)] mode [active (LACP) | auto (try PAgP) | desirable (PAgP) | on (only EtherChannel) | passive (try LACP)]
+	no shutdown
+	exit
+
+interface port-channel [GROUP-NUMBER(1)]
+	switchport mode trunk
 	exit
 
 ! Implement General Spanning Tree Settings
