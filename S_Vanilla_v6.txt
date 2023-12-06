@@ -95,12 +95,14 @@ interface vlan [SVI-NUMBER(1)]
 ! --------------------------------------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	shutdown
+	no switchport
 	channel-group [GROUP-NUMBER(1)] mode [active (LACP) | auto (try PAgP) | desirable (PAgP) | on (only EtherChannel) | passive (try LACP)]
 	no shutdown
 	exit
 
 interface port-channel [GROUP-NUMBER(1)]
 	switchport mode trunk
+	ip address [PORT-IP] [PORT-NETMASK]
 	exit
 
 ! Implement General Spanning Tree Settings
