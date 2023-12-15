@@ -17,6 +17,7 @@
 > <li>STP/PVST/RSTP/MSTP</li>
 > <li>EtherChannel/LACP/PAgP</li>
 > <li>Security settings</li>
+> <li>Load Balancing</li>
 > </ul><br>
 > Further configurations will follow.
 
