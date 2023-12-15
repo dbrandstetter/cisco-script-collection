@@ -105,6 +105,10 @@ interface port-channel [GROUP-NUMBER(1)]
 	ip address [PORT-IP] [PORT-NETMASK]
 	exit
 
+! Set Load-Balancing Method
+! -------------------------
+port-channel load-balance [src-des-mac | src-dest-ip | src-dest-port]
+
 ! Implement General Spanning Tree Settings
 ! ----------------------------------------
 spanning-tree pathcost method long
