@@ -18,8 +18,9 @@
 > <li>EtherChannel/LACP/PAgP</li>
 > <li>Security settings</li>
 > <li>Load Balancing</li>
+> <li>FHRP: HSRP</li>
 > </ul><br>
-> Further configurations will follow.
+> Further commands shall follow.
 
 ## Author
 
