@@ -34,3 +34,15 @@ show ssh
 show ip ssh
 
 show ip ports all
+
+! EC
+sh e s
+sh e l
+sh e p
+
+! STP
+sh span
+sh span sum
+
+! HSRP
+sh standby br
