@@ -20,7 +20,7 @@
 > <li>Load Balancing</li>
 > <li>FHRP: HSRP</li>
 > </ul><br>
-> Further commands shall follow.
+> Further protocols shall follow.
 
 ## Author
 
