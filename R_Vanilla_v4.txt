@@ -105,11 +105,28 @@ username [USERNAME] secret [SSH-PASSWORD]
 
 ! Add HSRP Redundancy
 ! -------------------
-int [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	standby version 2
 	standby [GROUP-ID] ip [IPv4-ADDRESS]
 	standby [GROUP-ID] priority [PRIORITY (100)]
 	standby [GROUP-ID] preempt
+	exit
+
+! Add NAT Service
+! ---------------
+! SNAT
+ip nat inside source static [IP-INSIDE-ADDRESS] [IP-OUTSIDE-ADDRESS]
+
+! DNAT (PAT-Option)
+ip nat pool [NAT-POOLNAME] [START-IP-ADDRESS] [END-IP-ADDRESS] netmask [NETMASK] [overload]
+access-list [ACL-NR] [permit | deny] [NETWORK-ADDRESS] [WILDCARD-MASK]
+ip nat inside source list [ACL-NR] pool [NAT-POOLNAME]
+
+! PAT
+ip nat inside source list [ACL-NR] interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)] overload
+
+interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+	ip nat [inside | outside]
 	exit
 
 ! Save Configuration
