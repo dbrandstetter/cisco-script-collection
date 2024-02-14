@@ -12,6 +12,10 @@ configure terminal
 ! -----------
 no ip domain-lookup
 
+! Enable Unicast Routing
+! ----------------------
+ipv6 unicast-routing
+
 ! Set Enable Password
 ! -------------------
 enable secret [ENABLE-PASSWORD(cisco)]
@@ -59,10 +63,10 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)][.SUBINTERFACE]
 
 ! Create DHCP-Pool(s)
 ! -------------------
-ip dhcp excluded-address [START-IPv4-ADDRESS] [END-IPv4-ADDRESS(included)]
+ip dhcp excluded-address [START-IP-ADDRESS] [END-IP-ADDRESS(included)]
 ip dhcp pool [POOLNAME]
-	network [NETWORK-IPv4-ADDRESS] [NETWORK-IPv4-SUBNET-MASK]
-	default-router [IPv4-ADDRESS]
+	network [NETWORK-IP-ADDRESS] [NETWORK-IP-SUBNET-MASK]
+	default-router [IP-ADDRESS]
 	dns-server [IP-ADDRESS]
 	domain-name [DOMAIN-NAME(www.example.net)]
 	lease [LEASE-DURATION(days hours minutes | infinite)]
@@ -79,19 +83,20 @@ service dhcp
 ! Configure Relay Agent
 ! ---------------------
 int [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
-	ip helper-address [IPv4-HELPER-ADDRESS]
+	ip helper-address [IPv-HELPER-ADDRESS]
 	exit
 
 ! Add Static Routes
 ! -----------------
-ip route 0.0.0.0 0.0.0.0 [IPV4-GATEWAY-OF-LAST-RESORT]
+ip route 0.0.0.0 0.0.0.0 [IPv4-GATEWAY-OF-LAST-RESORT]
+ip route ::/0 [IPv6-GATEWAY-OF-LAST-RESORT]
 
 ! Enable RIP Support
 ! ------------------
 router rip
 	version 2
 	no auto-summary
-	network [IPV4-NETWORK-ADDRESS]
+	network [IP-NETWORK-ADDRESS]
 	passive-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	default-information originate
 	exit
