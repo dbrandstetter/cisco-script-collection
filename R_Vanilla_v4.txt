@@ -64,16 +64,6 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)][.SUBINTERFACE]
 	no shutdown
 	exit
 
-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)][.SUBINTERFACE]
-	ipv6 enable
-	description [NETWORK-DESCRIPTION]
-	ipv6 address [(dhcp)] | [PORT-IPv6-ADDRESS][IPv6-PREFIX]]
-	ipv6 address [fe80::LLA-Address] link-local
-	encapsulation dot1Q [VLAN-ID] [native]
-	clock rate [CLOCK-RATE(64000)]
-	no shutdown
-	exit
-
 ! Create DHCP-Pool(s)
 ! -------------------
 ip dhcp excluded-address [START-IP-ADDRESS] [END-IP-ADDRESS(included)]
