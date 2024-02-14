@@ -26,6 +26,10 @@ show ip ssh
 
 show ip ports all
 
+show ip nat translations
+clear ip nat translations *
+show running-config | section NAT
+
 SWITCH
 ======
 show sdm prefer

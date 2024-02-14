@@ -2,6 +2,12 @@
 ! S W I T C H - [DEVICE-NAME]
 ! ================================================================
 
+! Declare SDM Template
+! --------------------
+sdm prefer dual-ipv4-and-ipv6 default
+
+! Reload now...
+
 ! Set Hostname
 ! ------------
 enable
@@ -11,6 +17,10 @@ configure terminal
 ! Disable DNL
 ! -----------
 no ip domain-lookup
+
+! Enable Unicast Routing
+! ----------------------
+ipv6 unicast-routing
 
 ! Set Enable Password
 ! -------------------
@@ -52,6 +62,8 @@ banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
 interface vlan [VLAN-ID]
 	description [VLAN-DESCRIPTION]
 	ip address [(dhcp)] | [IPv4-ADDRESS] [IPv4-SUBNET-MASK]
+	ipv6 address [(dhcp)] | [IPV6-ADDRESS/IPV6-PREFIX]
+	ipv6 address [fe80::LLA-Address] link-local
 	no shutdown
 	exit
 
@@ -78,13 +90,6 @@ interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	mdix auto
 	speed auto
 	duplex auto
-	no shutdown
-	exit
-
-! Configure Virtual Interface(s)
-! ------------------------------
-interface vlan [SVI-NUMBER(1)]
-	ip address [(dhcp)] | [IPV4-ADDRESS] [IPV4-SUBNET-MASK]
 	no shutdown
 	exit
 
@@ -117,6 +122,7 @@ spanning-tree mode [pvst | rapid-pvst | mstp]
 ! Declare Default Gateway
 ! -----------------------
 ip default-gateway [IPV4-DEFAULT-GATEWAY]
+ipv6 route ::/0 [IPv6-DEFAULT-GATEWAY]
 
 ! Disable Unused Services
 ! -----------------------
