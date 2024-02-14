@@ -104,6 +104,17 @@ router rip
 	default-information originate
 	exit
 
+! Enable OSPF Support
+! -------------------
+router ospf [PROCESS-ID (1)]
+	router-id [RIP (IP-FORMAT)]
+	network [NETWORK-ADDRESS] [WILDCARD-MASK] area [AREA-ID (0)]
+	passive-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+	default-information originate
+	exit
+
+ip ospf [PROCESS-ID (1)] area [AREA-ID (0)]
+
 ! Configure SSH-Access
 ! --------------------
 ip domain-name [DOMAIN-NAME]
