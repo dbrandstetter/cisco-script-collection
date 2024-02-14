@@ -19,6 +19,8 @@
 > <li>Security settings</li>
 > <li>Load Balancing</li>
 > <li>FHRP: HSRP</li>
+> <li>NAT/SNAT/DNAT/PAT</li>
+> <li>OSPF</li></li>
 > </ul><br>
 > Further protocols shall follow.
 
