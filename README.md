@@ -15,6 +15,7 @@
 > <li>VLAN</li>
 > <li>ROAS</li>
 > <li>STP/PVST/RSTP/MSTP</li>
+> <li>Portfast & BPDU Guard</li>
 > <li>EtherChannel/LACP/PAgP</li>
 > <li>Security settings</li>
 > <li>Load Balancing</li>
