@@ -93,6 +93,11 @@ interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	no shutdown
 	exit
 
+! Enable Portfast And BPDU Guard On All Access Ports
+! --------------------------------------------------
+spanning-tree portfast default
+spanning-tree portfast bpduguard default
+
 ! Create Trunk Links For EtherChannel/LACP/PAgP, Layer 2/3
 ! --------------------------------------------------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
