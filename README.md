@@ -17,7 +17,7 @@
 > <li>STP/PVST/RSTP/MSTP</li>
 > <li>Portfast & BPDU Guard</li>
 > <li>EtherChannel/LACP/PAgP</li>
-> <li>Security settings</li>
+> <li>Security measures</li>
 > <li>Load Balancing</li>
 > <li>FHRP: HSRP</li>
 > <li>NAT/SNAT/DNAT/PAT</li>
