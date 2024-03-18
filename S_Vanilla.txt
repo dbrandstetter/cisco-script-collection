@@ -2,11 +2,14 @@
 ! S W I T C H - [DEVICE-NAME]
 ! ================================================================
 
+
 ! Declare SDM Template
 ! --------------------
 sdm prefer dual-ipv4-and-ipv6 default
 
+
 ! Reload now...
+
 
 ! Set Hostname
 ! ------------
@@ -14,17 +17,21 @@ enable
 configure terminal
 	hostname [HOSTNAME]
 
+
 ! Disable DNL
 ! -----------
 no ip domain-lookup
+
 
 ! Enable Unicast Routing
 ! ----------------------
 ipv6 unicast-routing
 
+
 ! Set Enable Password
 ! -------------------
 enable secret [ENABLE-PASSWORD(cisco)]
+
 
 ! Set Console Password
 ! --------------------
@@ -36,6 +43,7 @@ line console 0
 	login
 	exit
 
+
 ! Configure Ports For Secure Access
 ! ---------------------------------
 line vty [(PORT-RANGE(0 15)]
@@ -46,6 +54,7 @@ line vty [(PORT-RANGE(0 15)]
 	login [DB-LOCATION(local)]
 	exit
 
+
 ! Adding Security Configurations (not avalable for all switches)
 ! --------------------------------------------------------------
 ! auto secure
@@ -53,9 +62,17 @@ service password-encryption
 security passwords min-length [MIN-PASSWORD-LENGTH(12)]
 login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
 
+
+! Mitigate Reconnaisance Attacks
+! ------------------------------
+no cdp run
+no lldp run
+
+
 ! Write Banner MOTD
 ! -----------------
 banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
+
 
 ! Configure Virtual Interface(s)
 ! ------------------------------
@@ -67,11 +84,13 @@ interface vlan [VLAN-ID]
 	no shutdown
 	exit
 
+
 ! Create VLAN(s)
 ! --------------
 vlan [VLAN-ID]
 	name [VLAN-NAME]
 	exit
+
 
 ! Configure Interface(s), DTP, STP, Trunking, VLANs
 ! -------------------------------------------------
@@ -84,7 +103,6 @@ interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	switchport trunk native vlan [VLAN-ID]
 	switchport trunk allowed vlan [VLAN-ID-LIST]
 	mls qos trust [cos | device cisco-phone | dscp | ip-precedence]
-	switchport portfast
 	spanning-tree [vlan [VLAN-ID]] cost [COST]
 	spanning-tree [vlan [VLAN-ID]] port-priority [PRIORITY]
 	mdix auto
@@ -93,10 +111,23 @@ interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	no shutdown
 	exit
 
+
 ! Enable Portfast And BPDU Guard On All Access Ports
 ! --------------------------------------------------
 spanning-tree portfast default
 spanning-tree portfast bpduguard default
+
+
+! Add Port Security
+! -----------------
+interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
+	switchport port-security
+	switchport port-security maximum [MAX-ADDRESSES(1-132)]
+	switchport port-security mac-address [STATIC-MAC | sticky]
+	switchport port-security violation [restict | protect | shutdown]
+	switchport aging [static | time [TIME IN MIN[1-1440)] | type [absolute | inactivity]]
+	exit
+
 
 ! Create Trunk Links For EtherChannel/LACP/PAgP, Layer 2/3
 ! --------------------------------------------------------
@@ -112,9 +143,11 @@ interface port-channel [GROUP-NUMBER(1)]
 	ip address [PORT-IP] [PORT-NETMASK]
 	exit
 
+
 ! Set Load-Balancing Method
 ! -------------------------
 port-channel load-balance [src-des-mac | src-dest-ip | src-dest-port]
+
 
 ! Implement General Spanning Tree Settings
 ! ----------------------------------------
@@ -124,14 +157,17 @@ spanning-tree vlan [VLAN-ID] priority [PRIORITY]
 spanning-tree vlan [VLAN-ID] root [primary | secondary]
 spanning-tree mode [pvst | rapid-pvst | mstp]
 
+
 ! Declare Default Gateway
 ! -----------------------
 ip default-gateway [IPV4-DEFAULT-GATEWAY]
 ipv6 route ::/0 [IPv6-DEFAULT-GATEWAY]
 
+
 ! Disable Unused Services
 ! -----------------------
 ! no ip http server
+
 
 ! Configuring SSH-Access
 ! ----------------------
@@ -140,6 +176,8 @@ crypto key generate rsa general-keys moulus [MODULUS-LENGTH (2048)]
 ip ssh version 2
 username [USERNAME] secret [SSH-PASSWORD]
 
+
 ! Save Configuration
 ! ------------------
 do write memory
+
