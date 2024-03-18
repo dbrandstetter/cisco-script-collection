@@ -4,7 +4,7 @@
 > A collection of templates for configuring <i>Cisco</i> devices.</br></br>
 > In the scripts...</br>
 > ...`[]` represent placeholders</br>
-> ...`()` stand for the usually chosen options</br>
+> ...`()` stand for the usually chosen options or valid ranges</br>
 > ...`|` indicate the possibility of several options</br></br>
 > Commands implemented so far:
 > <ul><li>Basic device configuration</li>
