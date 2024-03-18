@@ -2,23 +2,28 @@
 ! R O U T E R - [DEVICE-NAME]
 ! ===============================================================
 
+
 ! Set Hostname
 ! ------------
 enable
 configure terminal
 	hostname [HOSTNAME]
 
+
 ! Disable DNL
 ! -----------
 no ip domain-lookup
+
 
 ! Enable Unicast Routing
 ! ----------------------
 ipv6 unicast-routing
 
+
 ! Set Enable Password
 ! -------------------
 enable secret [ENABLE-PASSWORD(cisco)]
+
 
 ! Set Console Password
 ! --------------------
@@ -30,6 +35,7 @@ line console 0
 	login
 	exit
 
+
 ! Configure Ports For Secure Access
 ! ---------------------------------
 line vty [(PORT-RANGE(0 15)]
@@ -40,6 +46,13 @@ line vty [(PORT-RANGE(0 15)]
 	login [DB-LOCATION(local)]
 	exit
 
+
+! Mitigate Reconnaisance Attacks
+! ------------------------------
+no cdp run
+no lldp run
+
+
 ! Adding Security Configurations
 ! ------------------------------
 ! auto secure
@@ -47,9 +60,11 @@ service password-encryption
 security passwords min-length [MIN-PASSWORD-LENGTH(12)]
 login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
 
+
 ! Write Banner MOTD
 ! -----------------
 banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
+
 
 ! Configure (Sub-)Interface(s)
 ! ----------------------------
@@ -64,6 +79,7 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)][.SUBINTERFACE]
 	no shutdown
 	exit
 
+
 ! Create DHCP-Pool(s)
 ! -------------------
 ip dhcp excluded-address [START-IP-ADDRESS] [END-IP-ADDRESS(included)]
@@ -75,13 +91,16 @@ ip dhcp pool [POOLNAME]
 	lease [LEASE-DURATION(days hours minutes | infinite)]
 	exit
 
+
 ! Enable DHCP-Service
 ! -------------------
 service dhcp
 
+
 ! Disable Unused Services
 ! -----------------------
 ! no ip http server
+
 
 ! Configure Relay Agent
 ! ---------------------
@@ -89,10 +108,12 @@ int [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	ip helper-address [IPv-HELPER-ADDRESS]
 	exit
 
+
 ! Add Static Routes
 ! -----------------
 ip route 0.0.0.0 0.0.0.0 [IPv4-GATEWAY-OF-LAST-RESORT]
 ip route ::/0 [IPv6-GATEWAY-OF-LAST-RESORT]
+
 
 ! Enable RIP Support
 ! ------------------
@@ -103,6 +124,7 @@ router rip
 	passive-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	default-information originate
 	exit
+
 
 ! Enable OSPF Support
 ! -------------------
@@ -115,12 +137,14 @@ router ospf [PROCESS-ID (1)]
 
 ip ospf [PROCESS-ID (1)] area [AREA-ID (0)]
 
+
 ! Configure SSH-Access
 ! --------------------
 ip domain-name [DOMAIN-NAME]
 crypto key generate rsa general-keys moulus [MODULUS-LENGTH (2048)]
 ip ssh version 2
 username [USERNAME] secret [SSH-PASSWORD]
+
 
 ! Add HSRP Redundancy
 ! -------------------
@@ -130,6 +154,7 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	standby [GROUP-ID] priority [PRIORITY (100)]
 	standby [GROUP-ID] preempt
 	exit
+
 
 ! Add NAT Service
 ! ---------------
@@ -148,6 +173,8 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	ip nat [inside | outside]
 	exit
 
+
 ! Save Configuration
 ! ------------------
 do write memory
+
