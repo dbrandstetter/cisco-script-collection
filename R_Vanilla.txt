@@ -135,7 +135,9 @@ router ospf [PROCESS-ID (1)]
 	default-information originate
 	exit
 
-ip ospf [PROCESS-ID (1)] area [AREA-ID (0)]
+interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+	ip ospf [PROCESS-ID (1)] area [AREA-ID (0)]
+	exit
 
 
 ! Configure SSH-Access
