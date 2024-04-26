@@ -30,6 +30,9 @@ show ip nat translations
 clear ip nat translations *
 show running-config | section NAT
 
+show ip protocol
+show ip ospf
+
 SWITCH
 ======
 show sdm prefer
