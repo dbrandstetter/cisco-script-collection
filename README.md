@@ -23,6 +23,7 @@
 > <li>FHRP: HSRP</li>
 > <li>NAT/SNAT/DNAT/PAT</li>
 > <li>OSPF</li></li>
+> <li>Standard & Extended ACLs</li></li>
 > </ul><br>
 > Further protocols shall follow.
 
