@@ -190,7 +190,7 @@ ipv6 route ::/0 [IPv6-DEFAULT-GATEWAY]
 ! Configuring SSH-Access
 ! ----------------------
 ip domain-name [DOMAIN-NAME]
-crypto key generate rsa general-keys moulus [MODULUS-LENGTH (2048)]
+crypto key generate rsa general-keys modulus [MODULUS-LENGTH (2048)]
 ip ssh version 2
 username [USERNAME] secret [SSH-PASSWORD]
 
@@ -204,7 +204,7 @@ ip access-list standard [ACL-NUMBER (1-99) | ACL-NAME]
 	exit
 
 ! Extended
-ip access-list standard [ACL-NUMBER (100-199) | ACL-NAME]
+ip access-list extended [ACL-NUMBER (100-199) | ACL-NAME]
 	remark [ACL-REMARK]
 	[SEQ-NUMBER] [deny | permit] [icmp | ip | tcp | udp | ospf] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] [deny | permit] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] eq [PORT-NUMBER]
 	exit
