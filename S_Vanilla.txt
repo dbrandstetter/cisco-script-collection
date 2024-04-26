@@ -116,6 +116,7 @@ service password-encryption
 security passwords min-length [MIN-PASSWORD-LENGTH(12)]
 login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
 
+
 ! Mitigate ARP & DHCP Attacks
 ! ---------------------------
 ip dhcp snooping
@@ -128,10 +129,13 @@ interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	ip arp inspection trust
 	exit
 
+
 ! Mitigate Reconnaisance Attacks
 ! ------------------------------
 no cdp run
 no lldp run
+
+
 ! Add Port Security
 ! -----------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
