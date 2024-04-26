@@ -60,20 +60,6 @@ line vty [(PORT-RANGE(0 15)]
 	exit
 
 
-! Adding Security Configurations (not avalable for all switches)
-! --------------------------------------------------------------
-! auto secure
-service password-encryption
-security passwords min-length [MIN-PASSWORD-LENGTH(12)]
-login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
-
-
-! Mitigate Reconnaisance Attacks
-! ------------------------------
-no cdp run
-no lldp run
-
-
 ! Write Banner MOTD
 ! -----------------
 banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
@@ -123,6 +109,29 @@ spanning-tree portfast default
 spanning-tree portfast bpduguard default
 
 
+! Adding Security Configurations (not avalable for all switches)
+! --------------------------------------------------------------
+! auto secure
+service password-encryption
+security passwords min-length [MIN-PASSWORD-LENGTH(12)]
+login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
+
+! Mitigate ARP & DHCP Attacks
+! ---------------------------
+ip dhcp snooping
+ip dhcp snooping [VLAN-ID]
+ip arp inspection [VLAN-ID]
+ip arp inspection validate src-mac dst-mac ip
+
+interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
+	ip dhcp snooping trust
+	ip arp inspection trust
+	exit
+
+! Mitigate Reconnaisance Attacks
+! ------------------------------
+no cdp run
+no lldp run
 ! Add Port Security
 ! -----------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
