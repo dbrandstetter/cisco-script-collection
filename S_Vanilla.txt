@@ -79,7 +79,7 @@ banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
 interface vlan [VLAN-ID]
 	description [VLAN-DESCRIPTION]
 	ip address [(dhcp)] | [IPv4-ADDRESS] [IPv4-SUBNET-MASK]
-	ipv6 address [(dhcp)] | [IPV6-ADDRESS/IPV6-PREFIX]
+	ipv6 address [(dhcp)] | [IPv6-ADDRESS/IPv6-PREFIX]
 	ipv6 address [fe80::LLA-Address] link-local
 	no shutdown
 	exit
@@ -160,7 +160,7 @@ spanning-tree mode [pvst | rapid-pvst | mstp]
 
 ! Declare Default Gateway
 ! -----------------------
-ip default-gateway [IPV4-DEFAULT-GATEWAY]
+ip default-gateway [IPv4-DEFAULT-GATEWAY]
 ipv6 route ::/0 [IPv6-DEFAULT-GATEWAY]
 
 
@@ -175,6 +175,29 @@ ip domain-name [DOMAIN-NAME]
 crypto key generate rsa general-keys moulus [MODULUS-LENGTH (2048)]
 ip ssh version 2
 username [USERNAME] secret [SSH-PASSWORD]
+
+
+! Define ACLs & Device Access
+! ---------------------------
+! Standard
+ip access-list standard [ACL-NUMBER (1-99) | ACL-NAME]
+	remark [ACL-REMARK]
+	[SEQ-NUMBER] [deny | permit] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] [deny | permit] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]]
+	exit
+
+! Extended
+ip access-list standard [ACL-NUMBER (100-199) | ACL-NAME]
+	remark [ACL-REMARK]
+	[SEQ-NUMBER] [deny | permit] [icmp | ip | tcp | udp | ospf] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] [deny | permit] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] eq [PORT-NUMBER]
+	exit
+
+interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+	ip access-group [ACL-NUMBER | ACL-NAME] [in | out]
+	exit
+
+line vty [(PORT-RANGE(0 15)]
+	ip access-class [ACL-NAME] [in | out]
+	exit
 
 
 ! Save Configuration
