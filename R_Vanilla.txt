@@ -194,7 +194,7 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	ip access-group [ACL-NUMBER | ACL-NAME] [in | out]
 	exit
 
-line console 0
+line vty [(PORT-RANGE(0 15)]
 	ip access-class [ACL-NAME] [in | out]
 	exit
 
