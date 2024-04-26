@@ -167,6 +167,18 @@ interface port-channel [GROUP-NUMBER(1)]
 port-channel load-balance [src-des-mac | src-dest-ip | src-dest-port]
 
 
+! Create DHCP-Pool(s)
+! -------------------
+ip dhcp excluded-address [START-IP-ADDRESS] [END-IP-ADDRESS(included)]
+ip dhcp pool [POOLNAME]
+	network [NETWORK-IP-ADDRESS] [NETWORK-IP-SUBNET-MASK]
+	default-router [IP-ADDRESS]
+	dns-server [IP-ADDRESS]
+	domain-name [DOMAIN-NAME(www.example.net)]
+	lease [LEASE-DURATION(days hours minutes | infinite)]
+	exit
+
+
 ! Implement General Spanning Tree Settings
 ! ----------------------------------------
 spanning-tree pathcost method long
