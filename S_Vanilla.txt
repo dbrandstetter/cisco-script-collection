@@ -143,7 +143,7 @@ interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	switchport port-security maximum [MAX-ADDRESSES(1-132)]
 	switchport port-security mac-address [STATIC-MAC | sticky]
 	switchport port-security violation [restict | protect | shutdown]
-	switchport port-security aging [static | time [TIME IN MIN[1-1440)] | type [absolute | inactivity]]
+	switchport port-security aging time [TIME IN MIN[(1-1440)] | type [absolute | inactivity]
 	exit
 
 
