@@ -105,7 +105,7 @@ service dhcp
 ! Configure Relay Agent
 ! ---------------------
 int [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
-	ip helper-address [IPv-HELPER-ADDRESS]
+	ip helper-address [IP-HELPER-ADDRESS]
 	exit
 
 
@@ -173,6 +173,29 @@ ip nat inside source list [ACL-NR] interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (
 
 interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	ip nat [inside | outside]
+	exit
+
+
+! Define ACLs & Device Access
+! ---------------------------
+! Standard
+ip access-list standard [ACL-NUMBER (1-99) | ACL-NAME]
+	remark [ACL-REMARK]
+	[SEQ-NUMBER] [deny | permit] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] [deny | permit] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]]
+	exit
+
+! Extended
+ip access-list standard [ACL-NUMBER (100-199) | ACL-NAME]
+	remark [ACL-REMARK]
+	[SEQ-NUMBER] [deny | permit] [icmp | ip | tcp | udp | ospf] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] [deny | permit] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] eq [PORT-NUMBER]
+	exit
+
+interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+	ip access-group [ACL-NUMBER | ACL-NAME] [in | out]
+	exit
+
+line console 0
+	ip access-class [ACL-NAME] [in | out]
 	exit
 
 
