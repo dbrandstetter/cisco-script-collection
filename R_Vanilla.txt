@@ -36,6 +36,17 @@ line console 0
 	exit
 
 
+! Configure Ports For Secure Access
+! ---------------------------------
+line vty [(PORT-RANGE(0 15)]
+	motd-banner
+	password [PORT-PASSWORD(cisco)]
+	exec-timeout [MINUTES(5)] [SECONDS(30)]
+	transport input [CONNECTION-TYPE (telnet) | (ssh))
+	login [DB-LOCATION(local)]
+	exit
+
+
 ! Write Banner MOTD
 ! -----------------
 banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
