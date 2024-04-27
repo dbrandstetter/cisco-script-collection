@@ -57,10 +57,10 @@ banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
 interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)][.SUBINTERFACE]
 	description [NETWORK-DESCRIPTION]
 	ipv6 enable
+	encapsulation dot1Q [VLAN-ID] [native]
 	ip address [(dhcp)] | [[PORT-IPv4-ADDRESS] [PORT-IPv4-SUBNET-MASK]]
 	ipv6 address [(dhcp)] | [PORT-IPv6-ADDRESS][IPv6-PREFIX]]
 	ipv6 address [fe80::LLA-Address] link-local
-	encapsulation dot1Q [VLAN-ID] [native]
 	clock rate [CLOCK-RATE(64000)]
 	no shutdown
 	exit
