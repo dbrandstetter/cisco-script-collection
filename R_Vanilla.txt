@@ -173,7 +173,7 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 ! Configure SSH-Access
 ! --------------------
 ip domain-name [DOMAIN-NAME]
-crypto key generate rsa general-keys moulus [MODULUS-LENGTH (2048)]
+crypto key generate rsa general-keys modulus [MODULUS-LENGTH (2048)]
 ip ssh version 2
 username [USERNAME] secret [SSH-PASSWORD]
 
