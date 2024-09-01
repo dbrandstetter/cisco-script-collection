@@ -1,0 +1,100 @@
+# Author: David Brandstetter
+# Desc: A modest collection of several commands used for config verification and debugging.
+
+--------------------------------------------------------------------------
+## Windows terminal (cmd)
+
+### Show extensive IPv4/IPv6 settings
+    ipconfig /all
+
+### Renew the currently leased IPv4 & IPv6 addresses (via DHCP) 
+    1. ipconfig /release
+    2. ipconfig /renew
+
+### Display the IPv4/IPv6 routing table
+    route -4/-6 print
+
+### List the IPv4 MAC table (ARP)
+    arp -a
+
+### List the IPv6 MAC table (ND)
+    1. netsh
+    2. interface ipv6
+    3. show neighbors
+    -> short form: netsh int ipv6 sh n
+
+### List the joined IPv6 multicast groups
+    1. netsh
+    2. interface ipv6
+    3. show joins
+    -> short form: netsh int ipv6 sh j
+
+### Trace the hops to some destination (IP or domain name)
+    tracert DEST
+
+### Show detailed information regarding all resolved DNS mappings
+    ipconfig /displaydns
+
+--------------------------------------------------------------------------
+
+## Cisco router
+
+### Dynamic host configuration protocol (DHCP)
+show ip dhcp binding
+show ip dhcp server statistics
+show running-config | section dhcp
+show dhcp lease
+
+### Routing
+show ip route [connected|rip|static|summary]
+debug ip routing
+
+### Network address translation (NAT)
+show ip nat translations
+clear ip nat translations *
+show running-config | section NAT
+debug ip nat
+
+### Open shortest path first (OSPF)
+show ip ospf
+
+### Hot standby router protocol (HSRP)
+sh standby br
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+## Cisco switch & router
+
+### Secure shell (SSH)
+#### List the active sessions at the moment
+     show ssh
+#### Show ssh configured parameters
+     show ip ssh
+
+### List the active protocols on this device
+    show ip p
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
+
+## Cisco switch
+
+### Show the currently active switching database manager (SDM) setting
+show sdm prefer
+
+### Etherchannel (EC)
+#### Show etherchannel summary
+     sh e s
+#### Show etherchannel load-balance
+     sh e l
+#### Show etherchannel port-channel
+     sh e p
+
+### Spanning tree (STP)
+#### Show general spanning tree config
+     sh span
+#### Show summarized spanning tree config
+     sh span sum
+#### Show detailed spanning tree config
+     sh span d
+
+

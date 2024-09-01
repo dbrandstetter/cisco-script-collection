@@ -1,0 +1,36 @@
+# Author: David Brandstetter
+# Desc: A humble collection of various commands needed for administration and maintenance.
+
+
+## Cisco IOS
+
+### Change the IOS image used at startup
+    1. issue the 'show boot' command, to find out the currenct location of the OS image
+    2. transfer the new image to the device's flash memory
+    3. using 'boot system FILEPATH' in global config mode, set the new startup file - e.g. 'boot system flash:/c2960-lanbasek9-mz.150-2.SE/c2960-lanbasek9-mz.150-2.SE.bin'
+
+### Perform a password reset on a router
+    1. pull the power suppy from the router
+    2. wait ~10s
+    3. plug it back in
+    4. send cancel signal during boot (try Strg + C/Z, Strg + Break, Fn + B, Alt + B)
+    5. when successfull, the promt 'rommon:' should now be displayed
+    6. issue 'confreg 0x2142' (disabled the binary flag for required paassword)
+    7. 'reset'
+    8. after device has booted normaly: 'enable' + 'copy startup-config running-config'
+    9. set new passwords
+    10. 'config-register 0x2102', to re-enable password authentication
+    11. 'write memory'
+
+### Perform a password reset on a switch
+    1. pull the power suppy from the switch
+    2. wait ~10s
+    3. plug it back in & press the 'Mode' button for ~15s
+    4. when the boot prompt appears, issue 'flash_init'
+    5. 'rename config.text config.bak' (disable loading of startup-config)
+    6. 'reset'
+    8. after device has booted normaly: 'enable'
+    9. 'rename config.bak config.text', to re-enable the loading of the startup-config
+    10. 'copy config.text running-config'
+    11. set new passwords
+    12. 'write memory'
