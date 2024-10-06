@@ -35,7 +35,7 @@ ipv6 unicast-routing
 
 ! Set Enable Password
 ! -------------------
-enable secret [ENABLE-PASSWORD(cisco)]
+enable secret [ENABLE-PASSWORD]
 
 
 ! Set Console Password
@@ -43,26 +43,33 @@ enable secret [ENABLE-PASSWORD(cisco)]
 line console 0
 	motd-banner
 	logging synchronous
-	password [CONSOLE-PASSWORD(cisco)]
-	exec-timeout [MINUTES(5)] [SECONDS(30)]
+	password [CONSOLE-PASSWORD]
+	exec-timeout [MINUTES (0)] [SECONDS (0)]
 	login
 	exit
 
 
 ! Configure Ports For Secure Access
 ! ---------------------------------
-line vty [(PORT-RANGE(0 15)]
+line vty [(PORT-RANGE (0 15)]
 	motd-banner
-	password [PORT-PASSWORD(cisco)]
-	exec-timeout [MINUTES(5)] [SECONDS(30)]
+	password [PORT-PASSWORD]
+	exec-timeout [MINUTES (0)] [SECONDS (0)]
 	transport input [CONNECTION-TYPE (telnet) | (ssh))
-	login [DB-LOCATION(local)]
+	login [DB-LOCATION (local)]
 	exit
 
 
 ! Write Banner MOTD
 ! -----------------
-banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
+banner motd [BANNER-MODT (+This is a secure system. Authorized Access Only!+)]
+
+
+! Create VLAN(s)
+! --------------
+vlan [VLAN-ID]
+	name [VLAN-NAME]
+	exit
 
 
 ! Configure Virtual Interface(s)
@@ -76,23 +83,24 @@ interface vlan [VLAN-ID]
 	exit
 
 
-! Create VLAN(s)
-! --------------
-vlan [VLAN-ID]
-	name [VLAN-NAME]
-	exit
+! Enable RSTP, Portfast And BPDU Guard On All Access Ports
+! --------------------------------------------------------
+spanning-tree mode rapid-pvst
+spanning-tree portfast default
+spanning-tree portfast bpduguard default
 
 
-! Configure Interface(s), DTP, STP, Trunking, VLANs
+! Configure Trunk Interface(s), DTP, STP, Trunking, VLANs
 ! -------------------------------------------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	description [PORT-DESCRIPTION]
 	switchport trunk encapsulation dot1q
-	switchport mode [access | trunk | dynamic [auto | desirable]]
+	switchport mode trunk
 	switchport nonegotiate
-	switchport [access | voice] vlan [VLAN-ID]
 	switchport trunk native vlan [VLAN-ID]
 	switchport trunk allowed vlan [VLAN-ID-LIST]
+	switchport priority extend cos [DEVICE-PRIORITY (1-7)]
+	mls qos cos [CLASS-OF-SERVICE (1-7)]
 	mls qos trust [cos | device cisco-phone | dscp | ip-precedence]
 	spanning-tree [vlan [VLAN-ID]] cost [COST]
 	spanning-tree [vlan [VLAN-ID]] port-priority [PRIORITY]
@@ -103,18 +111,31 @@ interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	exit
 
 
-! Enable Portfast And BPDU Guard On All Access Ports
-! --------------------------------------------------
-spanning-tree portfast default
-spanning-tree portfast bpduguard default
+! Configure Access Interface(s), DTP, STP, Trunking, VLANs
+! -------------------------------------------------
+interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
+	description [PORT-DESCRIPTION]
+	switchport mode access
+	switchport nonegotiate
+	switchport access vlan [VLAN-ID]
+	switchport voice vlan [VLAN-ID]
+	switchport priority extend cos [DEVICE-PRIORITY (1-7)]
+	mls qos cos [CLASS-OF-SERVICE (1-7)]
+	mls qos trust [cos | device cisco-phone | dscp | ip-precedence]
+	spanning-tree [vlan [VLAN-ID]] cost [COST]
+	spanning-tree [vlan [VLAN-ID]] port-priority [PRIORITY]
+	mdix auto
+	speed auto
+	duplex auto
+	no shutdown
+	exit
 
-
-! Adding Security Configurations (not avalable for all switches)
-! --------------------------------------------------------------
+! Adding Security Configurations (not available for all switches)
+! ---------------------------------------------------------------
 ! auto secure
 service password-encryption
-security passwords min-length [MIN-PASSWORD-LENGTH(12)]
-login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
+security passwords min-length [MIN-PASSWORD-LENGTH]
+login block-for [TIMOUT-DURATION (180)] attempts [ATTEMPTS (3)] within [TIMESPAN (20)]
 
 
 ! Mitigate ARP & DHCP Attacks
@@ -124,6 +145,9 @@ ip dhcp snooping vlan [VLAN-ID]
 ip arp inspection vlan [VLAN-ID]
 ip arp inspection validate src-mac dst-mac ip
 
+
+! Configure trusted (infrastructural) links
+! -----------------------------------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	ip dhcp snooping trust
 	ip arp inspection trust
@@ -140,32 +164,38 @@ no lldp run
 ! -----------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	switchport port-security
-	switchport port-security maximum [MAX-ADDRESSES(1-132)]
+	switchport port-security maximum [MAX-ADDRESSES (1-132)]
 	switchport port-security mac-address [STATIC-MAC | sticky]
 	switchport port-security violation [restict | protect | shutdown]
-	switchport port-security aging time [TIME IN MIN[(1-1440)] | type [absolute | inactivity]
+	switchport port-security aging time [MINUTES (10)] | type [absolute | inactivity]
 	exit
 
 
 ! Create Trunk Links For EtherChannel/LACP/PAgP, Layer 2/3
 ! --------------------------------------------------------
-interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
+interface range [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	shutdown
 	no switchport
-	channel-group [GROUP-NUMBER(1)] mode [active (LACP) | auto (try PAgP) | desirable (PAgP) | on (only EtherChannel) | passive (try LACP)]
+	channel-protocol [lacp | pagp]
+	channel-group [GROUP-NUMBER (1-6)] mode [active (LACP) | auto (try PAgP) | desirable (PAgP) | on (only EtherChannel) | passive (try LACP)]
 	no shutdown
 	exit
 
-interface port-channel [GROUP-NUMBER(1)]
+interface port-channel [GROUP-NUMBER (1-6]
+	description [DECRIPTION]
 	switchport mode trunk
 	ip address [PORT-IP] [PORT-NETMASK]
+	ipv6 address [(dhcp)] | [IPv6-ADDRESS/IPv6-PREFIX]
+	ipv6 address [fe80::LLA-Address] link-local
 	exit
 
 
 ! Set Load-Balancing Method
 ! -------------------------
-port-channel load-balance [src-des-mac | src-dest-ip | src-dest-port]
+port-channel load-balance [src-dest-mac | src-dest-ip | src-dest-port]
 
+! Check
+! 
 
 ! Create DHCP-Pool(s)
 ! -------------------
@@ -181,11 +211,13 @@ ip dhcp pool [POOLNAME]
 
 ! Implement General Spanning Tree Settings
 ! ----------------------------------------
+spanning-tree mode rapid-pvst
 spanning-tree pathcost method long
-spanning-tree mode [psvt | rapid-pvst]
 spanning-tree vlan [VLAN-ID] priority [PRIORITY]
 spanning-tree vlan [VLAN-ID] root [primary | secondary]
-spanning-tree mode [pvst | rapid-pvst | mstp]
+spanning-tree vlan [VLAN-ID] hello-time 3
+spanning-tree vlan [VLAN-ID] forward-time 10
+spanning-tree vlan [VLAN-ID] max-age 20
 
 
 ! Declare Default Gateway
@@ -202,9 +234,9 @@ ipv6 route ::/0 [IPv6-DEFAULT-GATEWAY]
 ! Configuring SSH-Access
 ! ----------------------
 ip domain-name [DOMAIN-NAME]
+username [USERNAME] secret [SSH-PASSWORD]
 crypto key generate rsa general-keys modulus [MODULUS-LENGTH (2048)]
 ip ssh version 2
-username [USERNAME] secret [SSH-PASSWORD]
 
 
 ! Define ACLs & Device Access
