@@ -22,34 +22,34 @@ ipv6 unicast-routing
 
 ! Set Enable Password
 ! -------------------
-enable secret [ENABLE-PASSWORD(cisco)]
+enable secret [ENABLE-PASSWORD (cisco)]
 
 
 ! Set Console Password
 ! --------------------
 line console 0
 	motd-banner
-	password [CONSOLE-PASSWORD(cisco)]
 	logging synchronous
-	exec-timeout [MINUTES(5)] [SECONDS(30)]
+	password [CONSOLE-PASSWORD (cisco)]
+	exec-timeout [MINUTES (0)] [SECONDS (0)]
 	login
 	exit
 
 
 ! Configure Ports For Secure Access
 ! ---------------------------------
-line vty [(PORT-RANGE(0 15)]
+line vty [(PORT-RANGE (0 15)]
 	motd-banner
-	password [PORT-PASSWORD(cisco)]
-	exec-timeout [MINUTES(5)] [SECONDS(30)]
+	password [PORT-PASSWORD (cisco)]
+	exec-timeout [MINUTES (5)] [SECONDS (30)]
 	transport input [CONNECTION-TYPE (telnet) | (ssh))
-	login [DB-LOCATION(local)]
+	login [DB-LOCATION (local)]
 	exit
 
 
 ! Write Banner MOTD
 ! -----------------
-banner motd [BANNER-MODT(+This is a secure system. Authorized Access Only!+)]
+banner motd [BANNER-MODT (+This is a secure system. Authorized Access Only!+)]
 
 
 ! Configure (Sub-)Interface(s)
@@ -59,25 +59,26 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)][.SUBINTERFACE]
 	ipv6 enable
 	encapsulation dot1Q [VLAN-ID] [native]
 	ip address [(dhcp)] | [[PORT-IPv4-ADDRESS] [PORT-IPv4-SUBNET-MASK]]
-	ipv6 address [(dhcp)] | [PORT-IPv6-ADDRESS][IPv6-PREFIX]]
+	ipv6 address [(dhcp)] | [IPv6-ADDRESS/IPv6-PREFIX]
 	ipv6 address [fe80::LLA-Address] link-local
-	clock rate [CLOCK-RATE(64000)]
+	clock rate [CLOCK-RATE (64000)]
 	no shutdown
 	exit
 
 
-! Enable Portfast And BPDU Guard On All Access Ports
-! --------------------------------------------------
+! Enable RSTP, Portfast And BPDU Guard On All Access Ports
+! --------------------------------------------------------
+spanning-tree mode rapid-pvst
 spanning-tree portfast default
 spanning-tree portfast bpduguard default
 
 
-! Adding Security Configurations (not avalable for all switches)
+! Adding Security Configurations (not available for all routers)
 ! --------------------------------------------------------------
 ! auto secure
 service password-encryption
-security passwords min-length [MIN-PASSWORD-LENGTH(12)]
-login block-for [TIMOUT-DURATION(180)] attempts [ATTEMPTS(3)] within [TIMESPAN(60)]
+security passwords min-length [MIN-PASSWORD-LENGTH]
+login block-for [TIMOUT-DURATION (180)] attempts [ATTEMPTS (3)] within [TIMESPAN (20)]
 
 
 ! Mitigate ARP & DHCP Attacks
@@ -87,6 +88,9 @@ ip dhcp snooping vlan [VLAN-ID]
 ip arp inspection vlan [VLAN-ID]
 ip arp inspection validate src-mac dst-mac ip
 
+
+! Configure trusted (infrastructural) links
+! -----------------------------------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	ip dhcp snooping trust
 	ip arp inspection trust
@@ -99,17 +103,6 @@ no cdp run
 no lldp run
 
 
-! Add Port Security
-! -----------------
-interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
-	switchport port-security
-	switchport port-security maximum [MAX-ADDRESSES(1-132)]
-	switchport port-security mac-address [STATIC-MAC | sticky]
-	switchport port-security violation [restict | protect | shutdown]
-	switchport port-security aging time [TIME IN MIN(1-1440)] | type [absolute | inactivity]
-	exit
-
-
 ! Create DHCP-Pool(s)
 ! -------------------
 ip dhcp excluded-address [START-IP-ADDRESS] [END-IP-ADDRESS(included)]
@@ -117,14 +110,14 @@ ip dhcp pool [POOLNAME]
 	network [NETWORK-IP-ADDRESS] [NETWORK-IP-SUBNET-MASK]
 	default-router [IP-ADDRESS]
 	dns-server [IP-ADDRESS]
-	domain-name [DOMAIN-NAME(www.example.net)]
+	domain-name [DOMAIN-NAME]
 	lease [LEASE-DURATION(days hours minutes | infinite)]
 	exit
 
 
 ! Enable DHCP-Service
 ! -------------------
-service dhcp
+! service dhcp
 
 
 ! Disable Unused Services
@@ -173,9 +166,9 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 ! Configure SSH-Access
 ! --------------------
 ip domain-name [DOMAIN-NAME]
+username [USERNAME] secret [SSH-PASSWORD]
 crypto key generate rsa general-keys modulus [MODULUS-LENGTH (2048)]
 ip ssh version 2
-username [USERNAME] secret [SSH-PASSWORD]
 
 
 ! Add HSRP Redundancy
