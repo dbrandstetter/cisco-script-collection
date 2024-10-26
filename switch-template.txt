@@ -102,7 +102,7 @@ spanning-tree portfast bpduguard default
 
 
 ! Configure Trunk Interface(s), DTP, STP, Trunking, VLANs
-! -------------------------------------------------
+! -------------------------------------------------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	description [PORT-DESCRIPTION]
 	switchport trunk encapsulation dot1q
@@ -123,7 +123,7 @@ interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 
 
 ! Configure Access Interface(s), DTP, STP, Trunking, VLANs
-! -------------------------------------------------
+! --------------------------------------------------------
 interface [(range)] [PORT-TYPE (gig/fa)] [PORT-NUMBER(S) (0/0, 0/1/1, ...)]
 	description [PORT-DESCRIPTION]
 	switchport mode access
@@ -231,6 +231,7 @@ spanning-tree vlan [VLAN-ID] max-age 20
 ! Declare Default Gateway
 ! -----------------------
 ip default-gateway [IPv4-DEFAULT-GATEWAY]
+ip route 0.0.0.0 0.0.0.0 [IPv4-DEFAULT-GATEWAY]
 ipv6 route ::/0 [IPv6-DEFAULT-GATEWAY]
 
 
