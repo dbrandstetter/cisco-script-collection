@@ -223,13 +223,15 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 ! Standard
 ip access-list standard [ACL-NUMBER (1-99) | ACL-NAME]
 	remark [ACL-REMARK]
-	[SEQ-NUMBER] [deny | permit] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] [deny | permit] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]]
+	[SEQ-NUMBER] [deny | permit] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]]
+	deny any any
 	exit
 
 ! Extended
 ip access-list extended [ACL-NUMBER (100-199) | ACL-NAME]
 	remark [ACL-REMARK]
-	[SEQ-NUMBER] [deny | permit] [icmp | ip | tcp | udp | ospf] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] [deny | permit] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] eq [PORT-NUMBER]
+	[SEQ-NUMBER] [deny | permit] [icmp | ip | tcp | udp | ospf] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] [any | host [HOST-IP] | [NETWORK-ADDRESS] [WILDCARD MASK]] eq [PORT-NUMBER]
+	deny ip any any
 	exit
 
 interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
@@ -239,6 +241,7 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 line vty [(PORT-RANGE(0 15)]
 	ip access-class [ACL-NAME] [in | out]
 	exit
+
 
 ! Save Configuration
 ! ------------------
