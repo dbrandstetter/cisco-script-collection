@@ -10,12 +10,12 @@ sdm prefer dual-ipv4-and-ipv6 default
 
 ! Reload now...
 
+enable
+configure terminal
 
 ! Set Hostname
 ! ------------
-enable
-configure terminal
-	hostname [HOSTNAME]
+hostname [HOSTNAME]
 
 
 ! Disable DNL
@@ -30,7 +30,7 @@ ipv6 unicast-routing
 
 ! Start Layer 3 Routing
 ! ---------------------
-! ip routing
+ip routing
 
 
 ! Set Enable Password
@@ -53,6 +53,7 @@ line console 0
 ! ---------------------------------
 line vty [(PORT-RANGE (0 15)]
 	motd-banner
+	logging synchronous
 	password [PORT-PASSWORD]
 	exec-timeout [MINUTES (0)] [SECONDS (0)]
 	transport input [CONNECTION-TYPE (telnet) | (ssh))
@@ -71,6 +72,16 @@ vlan [VLAN-ID]
 	name [VLAN-NAME]
 	exit
 
+! Implement VTP
+! -------------
+vtp domain [DOMAIN-NAME]
+vtp mode [(server) | (client) | (transparent)]
+
+! Activate VTP Server
+exit
+vtp primary
+configure terminal
+
 
 ! Configure Virtual Interface(s)
 ! ------------------------------
@@ -83,9 +94,9 @@ interface vlan [VLAN-ID]
 	exit
 
 
-! Enable RSTP, Portfast And BPDU Guard On All Access Ports
+! Enable RSTP/MST, Portfast And BPDU Guard On All Access Ports
 ! --------------------------------------------------------
-spanning-tree mode rapid-pvst
+spanning-tree mode [(rapid-pvst) | (mst)]
 spanning-tree portfast default
 spanning-tree portfast bpduguard default
 
@@ -193,9 +204,6 @@ interface port-channel [GROUP-NUMBER (1-6]
 ! Set Load-Balancing Method
 ! -------------------------
 port-channel load-balance [src-dest-mac | src-dest-ip | src-dest-port]
-
-! Check
-! 
 
 ! Create DHCP-Pool(s)
 ! -------------------
