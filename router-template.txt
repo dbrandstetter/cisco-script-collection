@@ -2,12 +2,12 @@
 ! R O U T E R - [DEVICE-NAME]
 ! ===============================================================
 
+enable
+configure terminal
 
 ! Set Hostname
 ! ------------
-enable
-configure terminal
-	hostname [HOSTNAME]
+hostname [HOSTNAME]
 
 
 ! Disable DNL
@@ -40,8 +40,9 @@ line console 0
 ! ---------------------------------
 line vty [(PORT-RANGE (0 15)]
 	motd-banner
+	logging synchronous
 	password [PORT-PASSWORD (cisco)]
-	exec-timeout [MINUTES (5)] [SECONDS (30)]
+	exec-timeout [MINUTES (0)] [SECONDS (0)]
 	transport input [CONNECTION-TYPE (telnet) | (ssh))
 	login [DB-LOCATION (local)]
 	exit
@@ -64,13 +65,6 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)][.SUBINTERFACE]
 	clock rate [CLOCK-RATE (64000)]
 	no shutdown
 	exit
-
-
-! Enable RSTP, Portfast And BPDU Guard On All Access Ports
-! --------------------------------------------------------
-spanning-tree mode rapid-pvst
-spanning-tree portfast default
-spanning-tree portfast bpduguard default
 
 
 ! Adding Security Configurations (not available for all routers)
@@ -117,7 +111,7 @@ ip dhcp pool [POOLNAME]
 
 ! Enable DHCP-Service
 ! -------------------
-! service dhcp
+service dhcp
 
 
 ! Disable Unused Services
@@ -162,6 +156,20 @@ interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	ip ospf [PROCESS-ID (1)] area [AREA-ID (0)]
 	exit
 
+
+! Enable BGP Support
+! ------------------
+router bgp [AS-NUMBER]
+	bgp router-id interface [ROUTER-ID]
+	network [NETWORK-ADDRESS] mask [NETMASK]
+	! iBGP
+	neighbor [NEIGHBOR-IP] remote-as [LOCAL-AS-NUMBER]
+	neighbor [NEIGHBOR-IP] update-source [LOOPBACK-INTERFACE]
+	! eBGP
+	neighbor [PEER-IP] remote-as [REMOTE-AS-NUMBER]
+	neighbor [PEER-IP] ebgp-multihop [MAX-HOP-COUNT (3)]
+	exit
+	
 
 ! Configure SSH-Access
 ! --------------------
