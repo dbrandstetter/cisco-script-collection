@@ -126,6 +126,30 @@ int [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
 	exit
 
 
+! Enable OSPF Support
+! -------------------
+router ospf [PROCESS-ID (1)]
+	router-id [RIP (IP-FORMAT)]
+	network [NETWORK-ADDRESS] [WILDCARD-MASK] area [AREA-ID (0)]
+	passive-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+	default-information originate
+	exit
+
+interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
+	ip ospf [PROCESS-ID (1)] area [AREA-ID (0)]
+	exit
+
+
+! Configure GRE Tunnels
+! ---------------------
+interface tunnel [TUNNEL-NR]
+	tunnel mode gre ip
+	tunnel source [SRC-INTERFACE]
+	tunnel destination [DESTINATION-IP]
+	ip address [IP-ADDRESS] [NETMASK]
+	exit
+
+
 ! Add Static Routes
 ! -----------------
 ip route 0.0.0.0 0.0.0.0 [IPv4-GATEWAY-OF-LAST-RESORT]
@@ -142,19 +166,6 @@ router rip
 	default-information originate
 	exit
 
-
-! Enable OSPF Support
-! -------------------
-router ospf [PROCESS-ID (1)]
-	router-id [RIP (IP-FORMAT)]
-	network [NETWORK-ADDRESS] [WILDCARD-MASK] area [AREA-ID (0)]
-	passive-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
-	default-information originate
-	exit
-
-interface [PORT-TYPE (gig/fa)] [PORT-NUMBER (0/0, 0/1/1, ...)]
-	ip ospf [PROCESS-ID (1)] area [AREA-ID (0)]
-	exit
 
 
 ! Enable BGP Support
