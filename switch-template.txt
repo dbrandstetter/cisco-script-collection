@@ -72,6 +72,7 @@ vlan [VLAN-ID]
 	name [VLAN-NAME]
 	exit
 
+
 ! Implement VTP
 ! -------------
 vtp domain [DOMAIN-NAME]
@@ -205,6 +206,7 @@ interface port-channel [GROUP-NUMBER (1-6]
 ! -------------------------
 port-channel load-balance [src-dest-mac | src-dest-ip | src-dest-port]
 
+
 ! Create DHCP-Pool(s)
 ! -------------------
 ip dhcp excluded-address [START-IP-ADDRESS] [END-IP-ADDRESS(included)]
@@ -244,6 +246,7 @@ ipv6 route ::/0 [IPv6-DEFAULT-GATEWAY]
 ! ----------------------
 ip domain-name [DOMAIN-NAME]
 username [USERNAME] secret [SSH-PASSWORD]
+username [USERNAME] privilege [PRIVILEGE-LEVEL (0-16)]
 crypto key generate rsa general-keys modulus [MODULUS-LENGTH (2048)]
 ip ssh version 2
 
