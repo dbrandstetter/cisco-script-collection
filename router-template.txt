@@ -242,6 +242,19 @@ line vty [(PORT-RANGE(0 15)]
 	ip access-class [ACL-NAME] [in | out]
 	exit
 
+! CBAC Configuration
+ip access-list extended CBAC_ACL
+	remark BLOCK_ALL_TRAFFIC
+	deny ip any any
+	exit
+
+ip inspect name CBAC_INSPECTION [(icmp) | (tcp) | (udp) | (http)]
+
+interface [OUTSIDE-INTERFACE]
+	ip access-group CBAC_ACL in
+	ip inspect CBAC_INSPECTION out
+	exit
+
 
 ! Save Configuration
 ! ------------------
