@@ -167,7 +167,6 @@ router rip
 	exit
 
 
-
 ! Enable BGP Support
 ! ------------------
 router bgp [AS-NUMBER]
@@ -186,6 +185,7 @@ router bgp [AS-NUMBER]
 ! --------------------
 ip domain-name [DOMAIN-NAME]
 username [USERNAME] secret [SSH-PASSWORD]
+username [USERNAME] privilege [PRIVILEGE-LEVEL (0-16)]
 crypto key generate rsa general-keys modulus [MODULUS-LENGTH (2048)]
 ip ssh version 2
 
